@@ -42,13 +42,13 @@ bool isRealistic(struct pyramid p, double h)
 
 }//end of isRealistic
 
-//calculate area from every surface
-double getArea(struct pyramid p, double height) 
+ //calculate area from every surface
+double getArea(struct pyramid p, double height)
 {
-		
+
 }//end of getArea
 
-//calculate volume of pyramid
+ //calculate volume of pyramid
 double getVolume(struct pyramid p)
 {
 
