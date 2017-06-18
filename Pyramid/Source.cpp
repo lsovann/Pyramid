@@ -28,7 +28,8 @@ int main(void)
 		2
 	};
 	if (isRealistic(p1)) {
-		printf("The Area of p1 is: %f", getArea(p1));
+		printf("The Area of p1 is: %f\n", getArea(p1));
+		printf("The Volume of p1 is: %f", getVolume(p1));
 	}
 	getchar();
 	return 0;
@@ -79,5 +80,11 @@ double getArea(struct pyramid p)
  //calculate volume of pyramid
 double getVolume(struct pyramid p)
 {
-	return 0.4;
+	double base_area;
+	double volume;
+	double base_vertex = digonal_distance(p.base_point1, p.base_point2) / pow(2, 0.5);
+
+	base_area = pow(base_vertex, 2);
+	volume = (base_vertex * p.height) / 3;
+	return volume;
 }//end of getVolume
