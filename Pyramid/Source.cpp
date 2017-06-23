@@ -53,17 +53,11 @@ bool isSamePoint(struct point p1, struct point p2)
 	return samePoint;
 }//end of check samePoint
 
-//check if normal vector perpendicular with base surface, return true if it perpendicular
-bool isPerpendicular(struct vector n, struct point baseP1, struct point baseP2)
-{
-
-}// end of isPerpendicular
-
 //check if points can form pyramid
 bool isRealistic(struct pyramid p)
 {
 	bool realistic = false;
-	if (!isSamePoint(p.base_point1, p.base_point2) && p.height > 0 && isPerpendicular(p.normal, p.base_point1, p.base_point2))
+	if (!isSamePoint(p.base_point1, p.base_point2) && p.height > 0)
 	{
 		realistic = true;
 	}
@@ -111,6 +105,11 @@ double getPerimeter(struct pyramid p)
 	return 4 * base_length + 4 * triangle_side;
 }//end of getPerimeter
 
+struct point getApex()
+{
+
+}//end of getApex
+
 struct point getBasePoint3(struct pyramid p)
 {
 	//calculate base point3
@@ -123,7 +122,7 @@ struct point getBasePoint4(struct pyramid p)
 
 /*
 Sokhavirith's tasks:
-- complete fn isPerpendicular()
+- complete fn getApex()
 - complete fn getBasePoint3()
 - complete fn getBasePoint4()
 */
