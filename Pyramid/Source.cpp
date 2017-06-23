@@ -105,18 +105,31 @@ double getPerimeter(struct pyramid p)
 	return 4 * base_length + 4 * triangle_side;
 }//end of getPerimeter
 
-struct point getApex()
+struct point getApex(struct pyramid p)
 {
-
+	struct point apex = {{((p.base_point1.x + p.base_point2.x) / 2)+(p.normal.i)},{ ((p.base_point1.y + p.base_point2.y) / 2)+(p.normal.j) },{ ((p.base_point1.z + p.base_point2.z) / 2) + (p.height)+(p.normal.k)} };
+	return apex;
 }//end of getApex
 
 struct point getBasePoint3(struct pyramid p)
 {
+	struct point midpoint = { {(p.base_point1.x + p.base_point2.x) / 2},{ (p.base_point1.y + p.base_point2.y) / 2 },{ (p.base_point1.z + p.base_point2.z) / 2 } };
+	double length = getBaseLength(p.base_point1, p.base_point2)/2;
+	struct point point3 = { { ((p.base_point1.x + p.base_point2.x) / 2)+length },{ ((p.base_point1.y + p.base_point2.y) / 2)+length },{ ((p.base_point1.z + p.base_point2.z) / 2)+length
+	} };
+	return point3;
+
+
 	//calculate base point3
 }
 
 struct point getBasePoint4(struct pyramid p)
 {
+	struct point midpoint = { { (p.base_point1.x + p.base_point2.x) / 2 },{ (p.base_point1.y + p.base_point2.y) / 2 },{ (p.base_point1.z + p.base_point2.z) / 2 } };
+	double length = getBaseLength(p.base_point1, p.base_point2)/2;
+	struct point point4 = { { ((p.base_point1.x + p.base_point2.x) / 2) - length },{ ((p.base_point1.y + p.base_point2.y) / 2) - length },{ ((p.base_point1.z + p.base_point2.z) / 2) - length
+	} };
+	return point4;
 	//calculate base point4
 }
 
