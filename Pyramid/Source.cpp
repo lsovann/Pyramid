@@ -107,31 +107,77 @@ double getPerimeter(struct pyramid p)
 
 struct point getApex(struct pyramid p)
 {
-	struct point apex = {{((p.base_point1.x + p.base_point2.x) / 2)+(p.normal.i)},{ ((p.base_point1.y + p.base_point2.y) / 2)+(p.normal.j) },{ ((p.base_point1.z + p.base_point2.z) / 2) + (p.height)+(p.normal.k)} };
-	return apex;
+	struct vector unitVec;
+	unitVec.i = (p.normal.i) / normalLength(p.normal);
+	unitVec.j = (p.normal.j) / normalLength(p.normal);
+	unitVec.k = (p.normal.k) / normalLength(p.normal);
+
+	struct point apex;
+	apex.x = unitVec.i * p.height;
+	apex.y = unitVec.j * p.height;
+	apex.k = unitVec.k * p.height;
+	return { apex.x,apex.y,apex.z };
+
+
 }//end of getApex
 
 struct point getBasePoint3(struct pyramid p)
 {
-	struct point midpoint = { {(p.base_point1.x + p.base_point2.x) / 2},{ (p.base_point1.y + p.base_point2.y) / 2 },{ (p.base_point1.z + p.base_point2.z) / 2 } };
-	double length = getBaseLength(p.base_point1, p.base_point2)/2;
-	struct point point3 = { { ((p.base_point1.x + p.base_point2.x) / 2)+length },{ ((p.base_point1.y + p.base_point2.y) / 2)+length },{ ((p.base_point1.z + p.base_point2.z) / 2)+length
-	} };
-	return point3;
+	struct vector cross { //vector obtain from cross product of p1p2 and normal vector
+		cross.i = (p.base_point2.x - p.base_point1.x)*(p.normal.i),
+		cross.j = (p.base_point2.y - p.base_point1.y)*(p.normal.j),
+		cross.k = (p.base_point2.z - p.base_point1.z)*(p.normal.k)
 
-
+	};
+	double unitCross = pow(pow(cross.i, 2) + pow(cross.j, 2) + pow(cross.k, 2), 0.5); //unit vector of the cross product
+	struct vector unitVecCross {
+		unitVecCross.i = cross.i / unitCross,
+		unitVecCross.j = cross.j / unitCross,
+		unitVecCross.k = cross.k / unitCross
+	};
+	/*Mid point*/
+	double mid_x = p.base_point1.x + p.base_point2.x/ 2; 
+	double mid_y = p.base_point1.y + p.base_point2.y / 2;
+	double mid_z = p.base_point1.z + p.base_point2.z / 2;
+	/* Mid point*/
+	//find point 3 (takes unit vector of the cross product times half of the base length and add mid points)
+	double point3_x = unitVecCross.i *(0.5)*getBaseLength(p.base_point1, p.base_point2) + mid_x;
+	double point3_y = unitVecCross.j *(0.5)*getBaseLength(p.base_point1, p.base_point2)+mid_y;
+	double point3_z = unitVecCross.k *(0.5)*getBaseLength(p.base_point1, p.base_point2) + mid_z;
+	return { point3_x,point3_y,point3_z };
 	//calculate base point3
 }
 
 struct point getBasePoint4(struct pyramid p)
 {
-	struct point midpoint = { { (p.base_point1.x + p.base_point2.x) / 2 },{ (p.base_point1.y + p.base_point2.y) / 2 },{ (p.base_point1.z + p.base_point2.z) / 2 } };
-	double length = getBaseLength(p.base_point1, p.base_point2)/2;
-	struct point point4 = { { ((p.base_point1.x + p.base_point2.x) / 2) - length },{ ((p.base_point1.y + p.base_point2.y) / 2) - length },{ ((p.base_point1.z + p.base_point2.z) / 2) - length
-	} };
-	return point4;
+	struct vector cross { //vector obtain from cross product of p1p2 and normal vector
+		cross.i = (p.base_point2.x - p.base_point1.x)*(p.normal.i),
+			cross.j = (p.base_point2.y - p.base_point1.y)*(p.normal.j),
+			cross.k = (p.base_point2.z - p.base_point1.z)*(p.normal.k)
+
+	};
+	double unitCross = pow(pow(cross.i, 2) + pow(cross.j, 2) + pow(cross.k, 2), 0.5); //unit vector of the cross product
+	struct vector unitVecCross {
+		unitVecCross.i = cross.i / unitCross,
+			unitVecCross.j = cross.j / unitCross,
+			unitVecCross.k = cross.k / unitCross
+	};
+	/*Mid point*/
+	double mid_x = p.base_point1.x + p.base_point2.x / 2;
+	double mid_y = p.base_point1.y + p.base_point2.y / 2;
+	double mid_z = p.base_point1.z + p.base_point2.z / 2;
+	/* Mid point*/
+	double point4_x = (-1)*(unitVecCross.i *(0.5)*getBaseLength(p.base_point1, p.base_point2)) + mid_x;
+	double point4_y = (-1)*(unitVecCross.i *(0.5)*getBaseLength(p.base_point1, p.base_point2)) + mid_y;
+	double point4_z = (-1)*(unitVecCross.i *(0.5)*getBaseLength(p.base_point1, p.base_point2)) + mid_z;
+	return { point4_x,point4_y,point4_z };
 	//calculate base point4
 }
+
+double normalLength(struct vector nv) {
+	return pow((pow(nv.i,2), pow(nv.j,2), pow(nv.k,2)),0.5);
+}
+
 
 /*
 Sokhavirith's tasks:
