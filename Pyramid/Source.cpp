@@ -27,17 +27,27 @@ bool isSamePoint(struct point p1, struct point p2);
 bool isRealistic(struct pyramid p);
 double getArea(struct pyramid p);
 double getVolume(struct pyramid p);
+struct point getBasePoint3(struct pyramid p);
+struct point getBasePoint4(struct pyramid p);
+struct point getApex(struct pyramid p);
+double normalLength(struct vector nv);
 int main(void)
 {
 	struct pyramid p1 = {
 		{2, 0, 0},
 		{2, 2, 0},
-		2
+		2,
+		{2,3,5}
+
+
 	};
 	//my name: virith
 	if (isRealistic(p1)) {
 		printf("The Area of p1 is: %.2f\n", getArea(p1));
-		printf("The Volume of p1 is: %.2f", getVolume(p1));
+		printf("The Volume of p1 is: %.2f\n", getVolume(p1));
+		printf("Base point3 is (%.2f, %.2f, %.2f)\n",getBasePoint3(p1).x,getBasePoint3(p1).y,getBasePoint3(p1).z);
+		printf("Base point4 is (%.2f, %.2f, %.2f)\n",getBasePoint4(p1).x,getBasePoint4(p1).y,getBasePoint4(p1).z);
+		printf("Apex of the pyramid is (%.2f, %.2f, %.2f)",getApex(p1).x,getApex(p1).y,getApex(p1).z);
 	}
 	getchar();
 	return 0;
@@ -115,7 +125,7 @@ struct point getApex(struct pyramid p)
 	struct point apex;
 	apex.x = unitVec.i * p.height;
 	apex.y = unitVec.j * p.height;
-	apex.k = unitVec.k * p.height;
+	apex.z = unitVec.k * p.height;
 	return { apex.x,apex.y,apex.z };
 
 
@@ -136,7 +146,7 @@ struct point getBasePoint3(struct pyramid p)
 		unitVecCross.k = cross.k / unitCross
 	};
 	/*Mid point*/
-	double mid_x = p.base_point1.x + p.base_point2.x/ 2; 
+	double mid_x = p.base_point1.x + p.base_point2.x/ 2;
 	double mid_y = p.base_point1.y + p.base_point2.y / 2;
 	double mid_z = p.base_point1.z + p.base_point2.z / 2;
 	/* Mid point*/
