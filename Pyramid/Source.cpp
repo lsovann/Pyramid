@@ -85,6 +85,15 @@ double pythagor_equation(double a, double b)
 	return pow(pow(a, 2) + pow(b, 2), 0.5);
 }
 
+struct vector getVector(struct point p1, struct point p2)
+{
+	double i = p2.x - p1.x;
+	double j = p2.y - p1.y;
+	double k = p2.z - p1.z;
+	struct vector v = { i, j, k };
+	return v;
+}
+
 double height(struct vector n) {
 	return sqrt(pow(n.i, 2) + pow(n.j, 2) + pow(n.k, 2));
 }
