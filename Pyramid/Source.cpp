@@ -19,7 +19,6 @@ struct pyramid
 {
 	struct point base_point1;
 	struct point base_point2;
-	double height;
 	struct vector normal;
 };
 
@@ -27,27 +26,28 @@ bool isSamePoint(struct point p1, struct point p2);
 bool isRealistic(struct pyramid p);
 double getArea(struct pyramid p);
 double getVolume(struct pyramid p);
+double getBaseLength(struct point p1, struct point p2);
+double pythagor_equation(double a, double b);
+double height(struct vector n);
+double getPerimeter(struct pyramid p);
+struct point getApex(struct pyramid p);
 struct point getBasePoint3(struct pyramid p);
 struct point getBasePoint4(struct pyramid p);
-struct point getApex(struct pyramid p);
 double normalLength(struct vector nv);
+struct point findTail(struct vector v, struct point startP);
 int main(void)
 {
 	struct pyramid p1 = {
-		{2, 0, 0},
-		{2, 2, 0},
-		2,
-		{2,3,5}
-
-
+		{0, 0, 0},
+		{4, 4, 0},
+		{1, 4, 0}
 	};
 	//my name: virith
 	if (isRealistic(p1)) {
 		printf("The Area of p1 is: %.2f\n", getArea(p1));
 		printf("The Volume of p1 is: %.2f\n", getVolume(p1));
-		printf("Base point3 is (%.2f, %.2f, %.2f)\n",getBasePoint3(p1).x,getBasePoint3(p1).y,getBasePoint3(p1).z);
-		printf("Base point4 is (%.2f, %.2f, %.2f)\n",getBasePoint4(p1).x,getBasePoint4(p1).y,getBasePoint4(p1).z);
-		printf("Apex of the pyramid is (%.2f, %.2f, %.2f)",getApex(p1).x,getApex(p1).y,getApex(p1).z);
+		printf("The apex of p1 is: %.2f %.2f %.2f", getApex(p1).x, getApex(p1).y, getApex(p1).z);
+
 	}
 	getchar();
 	return 0;
@@ -67,7 +67,7 @@ bool isSamePoint(struct point p1, struct point p2)
 bool isRealistic(struct pyramid p)
 {
 	bool realistic = false;
-	if (!isSamePoint(p.base_point1, p.base_point2) && p.height > 0)
+	if (!isSamePoint(p.base_point1, p.base_point2) && height(p.normal) > 0)
 	{
 		realistic = true;
 	}
@@ -85,6 +85,10 @@ double pythagor_equation(double a, double b)
 	return pow(pow(a, 2) + pow(b, 2), 0.5);
 }
 
+double height(struct vector n) {
+	return sqrt(pow(n.i, 2) + pow(n.j, 2) + pow(n.k, 2));
+}
+
  //calculate area from every surface
 double getArea(struct pyramid p)
 {
@@ -92,7 +96,7 @@ double getArea(struct pyramid p)
 	double surface_area;
 
 	base_area = pow(getBaseLength(p.base_point1, p.base_point2), 2);
-	surface_area = pythagor_equation(p.height, getBaseLength(p.base_point1, p.base_point2)/2)*getBaseLength(p.base_point1, p.base_point2) / 2;
+	surface_area = pythagor_equation(height(p.normal), getBaseLength(p.base_point1, p.base_point2)/2)*getBaseLength(p.base_point1, p.base_point2) / 2;
 	return 4 * surface_area + base_area;
 }//end of getArea
 
@@ -103,13 +107,13 @@ double getVolume(struct pyramid p)
 	double volume;
 
 	base_area = pow(getBaseLength(p.base_point1, p.base_point2), 2);
-	volume = (base_area * p.height) / 3;
+	volume = (base_area * height(p.normal) /3);
 	return volume;
 }//end of getVolume
 
 double getPerimeter(struct pyramid p)
 {
-	double triangle_height = pythagor_equation(p.height, getBaseLength(p.base_point1, p.base_point2) / 2);
+	double triangle_height = pythagor_equation(height(p.normal), getBaseLength(p.base_point1, p.base_point2) / 2);
 	double base_length = getBaseLength(p.base_point1, p.base_point2);
 	double triangle_side = pythagor_equation(triangle_height, base_length/2);
 	return 4 * base_length + 4 * triangle_side;
@@ -117,19 +121,25 @@ double getPerimeter(struct pyramid p)
 
 struct point getApex(struct pyramid p)
 {
-	struct vector unitVec;
-	unitVec.i = (p.normal.i) / normalLength(p.normal);
-	unitVec.j = (p.normal.j) / normalLength(p.normal);
-	unitVec.k = (p.normal.k) / normalLength(p.normal);
+	double x = (p.base_point1.x + p.base_point2.x) / 2;
+	double y = (p.base_point1.y + p.base_point2.y) / 2;
+	double z = (p.base_point1.z + p.base_point2.z) / 2;
 
-	struct point apex;
-	apex.x = unitVec.i * p.height;
-	apex.y = unitVec.j * p.height;
-	apex.z = unitVec.k * p.height;
-	return { apex.x,apex.y,apex.z };
-
-
+	struct point midPoint = {
+		x, y, z
+	};
+	return findTail(p.normal, midPoint);
 }//end of getApex
+
+struct point findTail(struct vector v, struct point startP) {
+	double x = v.i + startP.x;
+	double y = v.j + startP.y;
+	double z = v.k + startP.z;
+	struct point endPoint = {
+		x, y, z
+	};
+	return endPoint;
+}
 
 struct point getBasePoint3(struct pyramid p)
 {
@@ -146,7 +156,7 @@ struct point getBasePoint3(struct pyramid p)
 		unitVecCross.k = cross.k / unitCross
 	};
 	/*Mid point*/
-	double mid_x = p.base_point1.x + p.base_point2.x/ 2;
+	double mid_x = p.base_point1.x + p.base_point2.x/ 2; 
 	double mid_y = p.base_point1.y + p.base_point2.y / 2;
 	double mid_z = p.base_point1.z + p.base_point2.z / 2;
 	/* Mid point*/
@@ -187,7 +197,6 @@ struct point getBasePoint4(struct pyramid p)
 double normalLength(struct vector nv) {
 	return pow((pow(nv.i,2), pow(nv.j,2), pow(nv.k,2)),0.5);
 }
-
 
 /*
 Sokhavirith's tasks:
