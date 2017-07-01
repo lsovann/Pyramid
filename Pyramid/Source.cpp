@@ -40,7 +40,11 @@ struct vector getCrossProduct(struct vector u, struct vector v);
 struct point getMidPoint(struct point p1, struct point p2);
 double getDotProduct(struct vector u, struct vector v);
 struct vector getVector(struct point p1, struct point p2);
+<<<<<<< HEAD
 int main(int argc, char *argv[])
+=======
+int main(void)
+>>>>>>> a9655262528eb807d974f474dd14a17b133979ed
 {
 	double point1X, point1Y, point1Z;
 	double point2X, point2Y, point2Z;
@@ -63,6 +67,7 @@ int main(int argc, char *argv[])
 		{point2X, point2Y, point2Z},
 		{normalI, normalJ, normalK}
 	};
+<<<<<<< HEAD
 	FILE *fpOutput;
 	if (argc != 2)
 	{
@@ -101,6 +106,21 @@ int main(int argc, char *argv[])
 	if (fclose(fpOutput) != 0) {
 		printf("Error in closing file %s\n", argv[1]);
 		exit(3);
+=======
+	struct vector u = { 0, 0, 4 };
+	struct vector v = { 2, 2, 0 };
+	
+	if (isRealistic(p1)) {
+		printf("The Area of p1 is:4 %.2f\n", getArea(p1));
+		printf("The Volume of p1 is: %.2f\n", getVolume(p1));
+		printf("The apex of p1 is: %.2f %.2f %.2f\n", getApex(p1).x, getApex(p1).y, getApex(p1).z);
+		printf("The p3 of p1 is: %.2f %.2f %.2f\n", getBasePoint3(p1).x, getBasePoint3(p1).y, getBasePoint3(p1).z);
+		printf("The p4 of p1 is: %.2f %.2f %.2f", getBasePoint4(p1).x, getBasePoint4(p1).y, getBasePoint4(p1).z);
+>>>>>>> a9655262528eb807d974f474dd14a17b133979ed
+	}
+	else
+	{
+		printf("not realistic");
 	}
 	getchar();
 	return 0;
