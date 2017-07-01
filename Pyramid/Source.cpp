@@ -40,11 +40,7 @@ struct vector getCrossProduct(struct vector u, struct vector v);
 struct point getMidPoint(struct point p1, struct point p2);
 double getDotProduct(struct vector u, struct vector v);
 struct vector getVector(struct point p1, struct point p2);
-<<<<<<< HEAD
 int main(int argc, char *argv[])
-=======
-int main(void)
->>>>>>> a9655262528eb807d974f474dd14a17b133979ed
 {
 	double point1X, point1Y, point1Z;
 	double point2X, point2Y, point2Z;
@@ -52,22 +48,21 @@ int main(void)
 	printf("Input the coordinates of the following points (Ex: Enter : 1 2 3)\n");
 	printf("Enter the coordinates of point 1 : ");
 	scanf_s("%lf %lf %lf", &point1X, &point1Y, &point1Z);
-	printf("Your point 1 coordinates (%.2f,%.2f,%.2f)\n",point1X,point1Y,point1Z);
+	printf("Your point 1 coordinates (%.2f,%.2f,%.2f)\n", point1X, point1Y, point1Z);
 	printf("Enter the coordinates of point 2 : ");
 	scanf_s("%lf %lf %lf", &point2X, &point2Y, &point2Z);
 	printf("Your point 2 coordinates (%.2f,%.2f,%.2f)\n", point2X, point2Y, point2Z);
 	printf("Enter the normal vector of the pyramid : ");
 	scanf_s("%lf %lf %lf", &normalI, &normalJ, &normalK);
-	printf("Your normal vector is (%.2f,%.2f,%.2f)", normalI, normalJ, normalK); 
+	printf("Your normal vector is (%.2f,%.2f,%.2f)", normalI, normalJ, normalK);
 	printf("\tPress any key to continue....\n");
 	getchar();
 	getchar();
 	struct pyramid p1 = {
-		{point1X, point1Y, point1Z},
-		{point2X, point2Y, point2Z},
-		{normalI, normalJ, normalK}
+		{ point1X, point1Y, point1Z },
+		{ point2X, point2Y, point2Z },
+		{ normalI, normalJ, normalK }
 	};
-<<<<<<< HEAD
 	FILE *fpOutput;
 	if (argc != 2)
 	{
@@ -76,7 +71,7 @@ int main(void)
 	}
 	errno_t err;
 	//if (!(fpOutput = fopen(argv[1], "a")))
-	if((
+	if ((
 		err = fopen_s(&fpOutput, argv[1], "a")
 		) != NULL)
 	{
@@ -106,21 +101,6 @@ int main(void)
 	if (fclose(fpOutput) != 0) {
 		printf("Error in closing file %s\n", argv[1]);
 		exit(3);
-=======
-	struct vector u = { 0, 0, 4 };
-	struct vector v = { 2, 2, 0 };
-	
-	if (isRealistic(p1)) {
-		printf("The Area of p1 is:4 %.2f\n", getArea(p1));
-		printf("The Volume of p1 is: %.2f\n", getVolume(p1));
-		printf("The apex of p1 is: %.2f %.2f %.2f\n", getApex(p1).x, getApex(p1).y, getApex(p1).z);
-		printf("The p3 of p1 is: %.2f %.2f %.2f\n", getBasePoint3(p1).x, getBasePoint3(p1).y, getBasePoint3(p1).z);
-		printf("The p4 of p1 is: %.2f %.2f %.2f", getBasePoint4(p1).x, getBasePoint4(p1).y, getBasePoint4(p1).z);
->>>>>>> a9655262528eb807d974f474dd14a17b133979ed
-	}
-	else
-	{
-		printf("not realistic");
 	}
 	getchar();
 	return 0;
@@ -136,12 +116,12 @@ bool isSamePoint(struct point p1, struct point p2)
 	return samePoint;
 }//end of check samePoint
 
-//check if points can form pyramid
+ //check if points can form pyramid
 bool isRealistic(struct pyramid p)
 {
 	bool realistic = false;
 	struct vector vDiagonal = getVector(p.base_point1, p.base_point2);
-	if (!isSamePoint(p.base_point1, p.base_point2) && getLengthOfVector(p.normal) > 0 && getDotProduct(vDiagonal, p.normal) == 0){
+	if (!isSamePoint(p.base_point1, p.base_point2) && getLengthOfVector(p.normal) > 0 && getDotProduct(vDiagonal, p.normal) == 0) {
 		realistic = true;
 	}
 	return realistic;
@@ -150,7 +130,7 @@ bool isRealistic(struct pyramid p)
 double getDistance(struct point p1, struct point p2)
 {
 	double digonal = pow(pow(p2.x - p1.x, 2) + pow(p2.y - p1.y, 2) + pow(p2.z - p1.z, 2), 0.5);
-	return digonal/pow(2, 0.5);
+	return digonal / pow(2, 0.5);
 }//end of getBaseLength
 
 double pythagor_equation(double a, double b)
@@ -167,14 +147,14 @@ struct vector getVector(struct point p1, struct point p2)
 	return v;
 }
 
- //calculate area from every surface
+//calculate area from every surface
 double getArea(struct pyramid p)
 {
 	double base_area;
 	double surface_area;
 
 	base_area = pow(getDistance(p.base_point1, p.base_point2), 2);
-	surface_area = pythagor_equation(getLengthOfVector(p.normal), getDistance(p.base_point1, p.base_point2)/2)*getDistance(p.base_point1, p.base_point2) / 2;
+	surface_area = pythagor_equation(getLengthOfVector(p.normal), getDistance(p.base_point1, p.base_point2) / 2)*getDistance(p.base_point1, p.base_point2) / 2;
 	return 4 * surface_area + base_area;
 }//end of getArea
 
@@ -185,7 +165,7 @@ double getVolume(struct pyramid p)
 	double volume;
 
 	base_area = pow(getDistance(p.base_point1, p.base_point2), 2);
-	volume = (base_area * getLengthOfVector(p.normal) /3);
+	volume = (base_area * getLengthOfVector(p.normal) / 3);
 	return volume;
 }//end of getVolume
 
@@ -193,7 +173,7 @@ double getPerimeter(struct pyramid p)
 {
 	double triangle_height = pythagor_equation(getLengthOfVector(p.normal), getDistance(p.base_point1, p.base_point2) / 2);
 	double base_length = getDistance(p.base_point1, p.base_point2);
-	double triangle_side = pythagor_equation(triangle_height, base_length/2);
+	double triangle_side = pythagor_equation(triangle_height, base_length / 2);
 	return 4 * base_length + 4 * triangle_side;
 }//end of getPerimeter
 
@@ -230,7 +210,7 @@ struct vector getCrossProduct(struct vector u, struct vector v)
 	double i = (u.j*v.k) - (u.k * v.j);
 	double j = -1 * ((u.i *v.k) - (v.i* u.k));
 	double k = (u.i * v.j) - (v.i * u.j);
-	struct vector crossProduct = { i, j , k};
+	struct vector crossProduct = { i, j , k };
 	return crossProduct;
 }
 
@@ -271,7 +251,7 @@ struct point getBasePoint4(struct pyramid p)
 }
 
 double getLengthOfVector(struct vector nv) {
-	return pow((pow(nv.i,2)+ pow(nv.j,2)+ pow(nv.k,2)),0.5);
+	return pow((pow(nv.i, 2) + pow(nv.j, 2) + pow(nv.k, 2)), 0.5);
 }
 double getDotProduct(struct vector u, struct vector v) {
 	return u.i*v.i + u.j*v.j + u.k*v.k;
