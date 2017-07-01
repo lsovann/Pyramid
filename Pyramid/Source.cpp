@@ -33,21 +33,28 @@ double getPerimeter(struct pyramid p);
 struct point getApex(struct pyramid p);
 struct point getBasePoint3(struct pyramid p);
 struct point getBasePoint4(struct pyramid p);
-double normalLength(struct vector nv);
+double vectorLength(struct vector nv);
 struct point findTail(struct vector v, struct point startP);
+struct vector getCrossProduct(struct vector u, struct vector v);
+struct point getMidPoint(struct point p1, struct point p2);
 int main(void)
 {
 	struct pyramid p1 = {
 		{0, 0, 0},
 		{4, 4, 0},
-		{1, 4, 0}
+		{0, 0, 4}
 	};
+	/*struct vector u = { 0, 4, 3 };
+	struct vector v = { 0, 3, 5 };
+	printf("The cross product is: %.2f %.2f %.2f\n", getCrossProduct(u, v).i, getCrossProduct(u, v).j, getCrossProduct(u, v).k);
+	printf("The length of u: %.2f\n", vectorLength(u));*/
 	//my name: virith
 	if (isRealistic(p1)) {
 		printf("The Area of p1 is: %.2f\n", getArea(p1));
 		printf("The Volume of p1 is: %.2f\n", getVolume(p1));
-		printf("The apex of p1 is: %.2f %.2f %.2f", getApex(p1).x, getApex(p1).y, getApex(p1).z);
-
+		printf("The apex of p1 is: %.2f %.2f %.2f\n", getApex(p1).x, getApex(p1).y, getApex(p1).z);
+		printf("The p3 of p1 is: %.2f %.2f %.2f\n", getBasePoint3(p1).x, getBasePoint3(p1).y, getBasePoint3(p1).z);
+		printf("The p4 of p1 is: %.2f %.2f %.2f", getBasePoint4(p1).x, getBasePoint4(p1).y, getBasePoint4(p1).z);
 	}
 	getchar();
 	return 0;
@@ -128,15 +135,21 @@ double getPerimeter(struct pyramid p)
 	return 4 * base_length + 4 * triangle_side;
 }//end of getPerimeter
 
-struct point getApex(struct pyramid p)
+struct point getMidPoint(struct point p1, struct point p2)
 {
-	double x = (p.base_point1.x + p.base_point2.x) / 2;
-	double y = (p.base_point1.y + p.base_point2.y) / 2;
-	double z = (p.base_point1.z + p.base_point2.z) / 2;
+	double x = (p1.x + p2.x) / 2;
+	double y = (p1.y + p2.y) / 2;
+	double z = (p1.z + p2.z) / 2;
 
 	struct point midPoint = {
 		x, y, z
 	};
+	return midPoint;
+}
+
+struct point getApex(struct pyramid p)
+{
+	struct point midPoint = getMidPoint(p.base_point1, p.base_point2);
 	return findTail(p.normal, midPoint);
 }//end of getApex
 
@@ -150,61 +163,38 @@ struct point findTail(struct vector v, struct point startP) {
 	return endPoint;
 }
 
+struct vector getCrossProduct(struct vector u, struct vector v)
+{
+	double i = (u.j*v.k) - (u.k * v.j);
+	double j = -1 * ((u.i *v.k) - (v.i* v.k));
+	double k = (u.i * v.j) - (v.i * u.j);
+	struct vector crossProduct = { i, j , k};
+	return crossProduct;
+}
+
 struct point getBasePoint3(struct pyramid p)
 {
-	struct vector cross { //vector obtain from cross product of p1p2 and normal vector
-		cross.i = (p.base_point2.x - p.base_point1.x)*(p.normal.i),
-		cross.j = (p.base_point2.y - p.base_point1.y)*(p.normal.j),
-		cross.k = (p.base_point2.z - p.base_point1.z)*(p.normal.k)
-
-	};
-	double unitCross = pow(pow(cross.i, 2) + pow(cross.j, 2) + pow(cross.k, 2), 0.5); //unit vector of the cross product
-	struct vector unitVecCross {
-		unitVecCross.i = cross.i / unitCross,
-		unitVecCross.j = cross.j / unitCross,
-		unitVecCross.k = cross.k / unitCross
-	};
-	/*Mid point*/
-	double mid_x = p.base_point1.x + p.base_point2.x/ 2; 
-	double mid_y = p.base_point1.y + p.base_point2.y / 2;
-	double mid_z = p.base_point1.z + p.base_point2.z / 2;
-	/* Mid point*/
-	//find point 3 (takes unit vector of the cross product times half of the base length and add mid points)
-	double point3_x = unitVecCross.i *(0.5)*getBaseLength(p.base_point1, p.base_point2) + mid_x;
-	double point3_y = unitVecCross.j *(0.5)*getBaseLength(p.base_point1, p.base_point2)+mid_y;
-	double point3_z = unitVecCross.k *(0.5)*getBaseLength(p.base_point1, p.base_point2) + mid_z;
-	return { point3_x,point3_y,point3_z };
-	//calculate base point3
+	struct vector vDiagonal = getVector(p.base_point1, p.base_point2);
+	struct vector vP3 = getCrossProduct(vDiagonal, p.normal);
+	double lengthVP3 = vectorLength(vP3);
+	double cont = (vectorLength(vDiagonal) / lengthVP3 * 2);
+	double i = cont * vP3.i;
+	double j = cont * vP3.j;
+	double k = cont * vP3.k;
+	struct vector vP3_final = { i, j, k };
+	return findTail(vP3_final, getMidPoint(p.base_point1, p.base_point2));
 }
 
 struct point getBasePoint4(struct pyramid p)
 {
-	struct vector cross { //vector obtain from cross product of p1p2 and normal vector
-		cross.i = (p.base_point2.x - p.base_point1.x)*(p.normal.i),
-			cross.j = (p.base_point2.y - p.base_point1.y)*(p.normal.j),
-			cross.k = (p.base_point2.z - p.base_point1.z)*(p.normal.k)
-
-	};
-	double unitCross = pow(pow(cross.i, 2) + pow(cross.j, 2) + pow(cross.k, 2), 0.5); //unit vector of the cross product
-	struct vector unitVecCross {
-		unitVecCross.i = cross.i / unitCross,
-			unitVecCross.j = cross.j / unitCross,
-			unitVecCross.k = cross.k / unitCross
-	};
-	/*Mid point*/
-	double mid_x = p.base_point1.x + p.base_point2.x / 2;
-	double mid_y = p.base_point1.y + p.base_point2.y / 2;
-	double mid_z = p.base_point1.z + p.base_point2.z / 2;
-	/* Mid point*/
-	double point4_x = (-1)*(unitVecCross.i *(0.5)*getBaseLength(p.base_point1, p.base_point2)) + mid_x;
-	double point4_y = (-1)*(unitVecCross.i *(0.5)*getBaseLength(p.base_point1, p.base_point2)) + mid_y;
-	double point4_z = (-1)*(unitVecCross.i *(0.5)*getBaseLength(p.base_point1, p.base_point2)) + mid_z;
-	return { point4_x,point4_y,point4_z };
-	//calculate base point4
+	double x = -1 * getBasePoint3(p).x;
+	double y = -1 * getBasePoint3(p).y;
+	double z = -1 * getBasePoint3(p).z;
+	return { x, y, z };
 }
 
-double normalLength(struct vector nv) {
-	return pow((pow(nv.i,2), pow(nv.j,2), pow(nv.k,2)),0.5);
+double vectorLength(struct vector nv) {
+	return pow((pow(nv.i,2)+ pow(nv.j,2)+ pow(nv.k,2)),0.5);
 }
 
 /*
